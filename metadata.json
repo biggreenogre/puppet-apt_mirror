@@ -1,0 +1,19 @@
+{
+  "author": "jtopjian",
+  "dependencies": [
+    {
+      "name": "puppetlabs/concat",
+      "version_requirement": "\u003e\u003d 0.2.0"
+    }
+  ],
+  "description": "This module manages apt-mirror. You can add mirrors on a per-mirror basis.",
+  "license": "Apache 2.0",
+  "name": "jtopjian-apt_mirror",
+  "operatingsystem_support": [],
+  "project_page": "https://github.com/jtopjian/puppet-apt_mirror",
+  "requirements": [],
+  "source": "git://github.com/jtopjian/puppet-apt_mirror.git",
+  "summary": "A simple module to work with apt-mirror",
+  "tags": [],
+  "version": "1.1.3"
+}

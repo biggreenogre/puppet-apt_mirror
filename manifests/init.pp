@@ -88,15 +88,31 @@
 #
 # Default: false
 #
+# [*cron_min*]
+#
+# "minute" setting for cron job (String or array)
+#
+# Default: '0'
+#
+# [*cron_hr*]
+#
+# "hour" setting for cron job (String or array)
+#
+# Default: '4'
+#
 # == Requires
 #
 # puppetlabs-concat
 #
 # == Examples
 #
+# Run apt-mirror every 2 hrs from 6pm until 2am
+#
 # class { 'apt_mirror':
 #   nthreads        => 5,
 #   wget_limit_rate => 100k,
+#   cron_min        => '37',
+#   cron_hr         => [ '0', '1', '2', '18', '20', '22', ],
 # }
 #
 class apt_mirror (
@@ -115,6 +131,8 @@ class apt_mirror (
   $wget_auth_no_challenge    = false,
   $wget_no_check_certificate = false,
   $wget_unlink               = false,
+  $cron_min                  = '0',
+  $cron_hr                   = '4',
   $mirror_list               = {}
 ) {
 
@@ -139,8 +157,8 @@ class apt_mirror (
     ensure  => $enabled ? { false => absent, default => present },
     user    => 'root',
     command => '/usr/bin/apt-mirror /etc/apt/mirror.list',
-    minute  => 0,
-    hour    => 4,
+    minute  => $cron_min,
+    hour    => $cron_hr,
   }
 
   create_resources('apt_mirror::mirror', $mirror_list)
