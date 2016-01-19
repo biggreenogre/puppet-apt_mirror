@@ -1,0 +1,18 @@
+
+# clean <%= @name %>
+<% if @mirror.include?('://') -%>
+clean <%= @mirror -%> %>
+<% else -%>
+clean http<%- if @ssl -%>s<%- end -%>://<%= @mirror -%> %>
+<% end -%>
+
+<% if @skip_clean -%>
+<% @skip_clean.each do |sc| -%>
+<% if @mirror.include?('://') -%>
+skip-clean <%= @mirror -%>/<%= @sc -%>
+<% else -%>
+skip-clean http<%- if @ssl -%>s<%- end -%>://<%= @mirror -%>/<%= @sc -%>
+<% end -%>
+<% end -%>
+<% end -%>
+

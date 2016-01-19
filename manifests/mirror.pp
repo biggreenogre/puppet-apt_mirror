@@ -38,6 +38,18 @@
 #
 # Default: undef
 #
+# [*clean*]
+#
+# Enable repo cleaning. Boolean, true|false
+#
+# Default: false
+#
+# [*skip_clean*]
+#
+# Array of paths within repo to skip when cleaning  (e.g. [ 'ubuntu/dists/trusty/main', 'ubuntu/dists/trusty/universe/binary-armhf', ] )
+#
+# Default: undef
+#
 define apt_mirror::mirror (
   $mirror,
   $os         = 'ubuntu',
@@ -46,6 +58,8 @@ define apt_mirror::mirror (
   $source     = false,
   $alt_arch   = undef,
   $ssl        = false,
+  $clean      = false,
+  $skip_clean = undef,
 ) {
 
   concat::fragment { $name:
@@ -53,5 +67,12 @@ define apt_mirror::mirror (
     content => template('apt_mirror/mirror.erb'),
     order   => '02',
   }
-
+  
+  if $clean {
+    concat::fragment { "${name}_clean":
+      target  => '/etc/apt/mirror.list',
+      content => template('apt_mirror/clean.erb'),
+      order   => '04',
+    }
+  }
 }

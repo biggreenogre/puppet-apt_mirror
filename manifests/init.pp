@@ -90,13 +90,13 @@
 #
 # [*cron_min*]
 #
-# "minute" setting for cron job (String or array)
+# "minute" setting for cron job (String or array) (See Puppet type "cron")
 #
 # Default: '0'
 #
 # [*cron_hr*]
 #
-# "hour" setting for cron job (String or array)
+# "hour" setting for cron job (String or array) (See Puppet type "cron")
 #
 # Default: '4'
 #
@@ -133,6 +133,7 @@ class apt_mirror (
   $wget_unlink               = false,
   $cron_min                  = '0',
   $cron_hr                   = '4',
+  $auto_clean                = false,
   $mirror_list               = {}
 ) {
 
@@ -153,6 +154,39 @@ class apt_mirror (
     order   => '01',
   }
 
+  concat::fragment { 'mirror.list footer':
+    target  => '/etc/apt/mirror.list',
+    content => template('apt_mirror/footer.erb'),
+    order   => '03',
+  }
+  
+  # Add or remove clean script to postmirror script and set if postmirror to run  
+  if $auto_clean {
+    $_run_post  = '1'
+    $_run_clean = 'present'
+  } else {
+    $_run_post  = $run_postmirror
+    $_run_clean = 'absent'
+  }
+  
+  $_post_script = split( $postmirror_script, '/' )
+  if values_at( $_post_script, 0 ) == '$var_path' {
+    $post_script = join( concat( [ "${var_path}" ], delete_at( $_post_script, 0) ), '/' )
+  } else {
+    $post_script = $postmirror_script
+  }
+  $_clean_script = split( $cleanscript, '/' )
+  if values_at( $_clean_script, 0 ) == '$var_path' {
+    $clean_script = join( concat( [ "${var_path}" ], delete_at( $_clean_script, 0) ), '/' )
+  } else {
+    $clean_script = $cleanscript
+  }
+  file_line{ 'run_clean':
+    ensure => "${_run_clean}",
+    path   => "${post_script}",
+    line   => "${clean_script}"
+  }
+  
   cron { 'apt-mirror':
     ensure  => $enabled ? { false => absent, default => present },
     user    => 'root',
