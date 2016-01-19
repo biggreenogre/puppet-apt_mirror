@@ -14,6 +14,12 @@
 #
 # Default: 'ubuntu'
 #
+# [*base_arch*]
+#
+# Set base architecture for this repo. String (override default architecture for this repo)
+#
+# Default: undef
+#
 # [*release*]
 #
 # Array of release version names to include in mirror ( e.g. [ 'trusty', 'trusty-updates', ] )
