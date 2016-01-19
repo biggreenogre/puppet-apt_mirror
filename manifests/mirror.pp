@@ -14,12 +14,6 @@
 #
 # Default: 'ubuntu'
 #
-# [*base_arch*]
-#
-# If set, use this architecture instead of the default (native) arch
-#
-# Default: undef
-#
 # [*release*]
 #
 # Array of release version names to include in mirror ( e.g. [ 'trusty', 'trusty-updates', ] )
@@ -47,7 +41,6 @@
 define apt_mirror::mirror (
   $mirror,
   $os         = 'ubuntu',
-  $base_arch  = undef,
   $release    = ['precise'],
   $components = ['main', 'contrib', 'non-free'],
   $source     = false,
