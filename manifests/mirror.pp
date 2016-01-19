@@ -53,6 +53,7 @@
 define apt_mirror::mirror (
   $mirror,
   $os         = 'ubuntu',
+  $base_arch  = undef,
   $release    = ['precise'],
   $components = ['main', 'contrib', 'non-free'],
   $source     = false,
@@ -61,7 +62,11 @@ define apt_mirror::mirror (
   $clean      = false,
   $skip_clean = undef,
 ) {
-
+  
+  if $base_arch != undef {
+    $arch = "${base_arch}"
+  }
+  
   concat::fragment { $name:
     target  => '/etc/apt/mirror.list',
     content => template('apt_mirror/mirror.erb'),
